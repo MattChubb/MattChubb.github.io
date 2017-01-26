@@ -1,7 +1,116 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Prime name calculator</title>
+  <meta name="description" content="Prime name calculator">
+  <meta name="author" content="Matthew Chubb">
+  
+  <script src="jquery-3.1.1.min.js"></script>
+  <script src="bootstrap.min.js"></script>
+  <link href="bootstrap.min.css" rel="stylesheet">
+  
+  <script type="text/javascript">
+	function validate(name) {
+	  if (! name.match(/^[A-z]*$/)) {
+		return false;
+	  }
+	  
+	  return true;
+	}
+	
+	function numberify(name) {
+		var totalScore = 0;
+	
+		name = name.replace(/\s*/g, "");
+	    if (! validate(name)) {
+			failMessage("Invalid name (" + name + "), only A-Z accepted.");
+			throw "Invalid name (" + name + "), only A-Z accepted.";
+		};
+		
+		name.toLowerCase()
+			.split('')
+			.forEach(function(letter){
+				totalScore += letterToNumber(letter);
+			});
+		
+		return totalScore;
+	}
+	
+	function letterToNumber(letter) {
+		var score = letter.charCodeAt(0) - 96;
+		if (1 < score < 27) {
+			return score;
+		}
+		
+		throw "Invalid letter encountered (" + letter + "): Only A-Z accepted";
+	}
+	
+	function checkPrime(number) {
+		for(var it = 2; it <= Math.sqrt(number); it++) {
+			if(number % it === 0) {
+				return false;
+			}
+		}
+		
+		return number > 1;
+	}
+	
+	function successMessage(message) {
+		$("#message-block").attr("class", "row bg-success");
+		$("#message").text(message);
+	}
+	function failMessage(message) {
+		$("#message-block").attr("class", "row bg-danger");
+		$("#message").text(message);
+	}
+	function setScore(score) {
+		$("#score").text(score);
+	}
+	
+  </script>
+</head>
+
+
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+	<div class="container">
+		<div class="page-header row">
+			<h1>Prime name calculator
+				<small>Inspired by the play "The Curious Incident of the Dog in the Nighttime"</small>
+			</h1>
+		</div>
+
+		<div class="input-group row">
+			<input id="name" type="text" class="form-control" />
+			<span class="input-group-btn">
+				<button id="go" type="button" class="btn btn-primary">Check</button>
+			</span>
+		</div>
+		
+		<div id="message-block" class="row hidden">
+			<div class="col-xs-10">
+				<div id="message" class="panel-body" /> </div> 
+			</div>
+			<div class="col-xs-2 pull-right text-right">
+				Score: <button id="score" class="btn">  </button>
+			</div>
+		</div>
+	</div>
+  
+
+  <script type="text/javascript">
+	$("#go").on("click", function(){
+		var name = $("#name").val();
+		var score = numberify(name);
+	  
+		setScore(score);
+		if (checkPrime(score)) {
+			successMessage( name + " is prime!");
+		} else {
+			failMessage( name + " is not prime!");
+		}
+	});
+  </script>
 </body>
 </html>
