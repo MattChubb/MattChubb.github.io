@@ -58,17 +58,28 @@
 	}
 	
 	function successMessage(message) {
-		$("#message-block").attr("class", "row bg-success");
+		$("#message-block").css("background-color", "#00ffff");
 		$("#message").text(message);
 	}
 	function failMessage(message) {
-		$("#message-block").attr("class", "row bg-danger");
+		$("#message-block").css("background-color", "#ff3232");
 		$("#message").text(message);
 	}
 	function setScore(score) {
 		$("#score").text(score);
 	}
 	
+	function checkName() {
+		var name = $("#name").val();
+		var score = numberify(name);
+	  
+		setScore(score);
+		if (checkPrime(score)) {
+			successMessage( name + " is prime!");
+		} else {
+			failMessage( name + " is not prime!");
+		}
+	}
   </script>
 </head>
 
@@ -80,35 +91,31 @@
 				<small>Inspired by the play "The Curious Incident of the Dog in the Nighttime"</small>
 			</h1>
 		</div>
-
+		
 		<div class="input-group row">
-			<input id="name" type="text" class="form-control" />
+			<input id="name" type="text" class="form-control" placeholder="Type in your name and hit 'Check' to see if the letters in your name add up to a prime" />
 			<span class="input-group-btn">
-				<button id="go" type="button" class="btn btn-primary">Check</button>
+				<div id="go" type="button" class="btn btn-primary">Check</div>
 			</span>
 		</div>
 		
-		<div id="message-block" class="row hidden">
-			<div class="col-xs-10">
-				<div id="message" class="panel-body" /> </div> 
+		<div id="message-block" class="row">
+			<div class="col-xs-11 text-center">
+				<strong id="message" class="panel-body" /> </strong>
 			</div>
-			<div class="col-xs-2 pull-right text-right">
-				Score: <button id="score" class="btn">  </button>
+			<div class="col-xs-1 pull-right text-center">
+				<strong id="score" class="panel-body">  </strong>
 			</div>
 		</div>
 	</div>
   
 
   <script type="text/javascript">
-	$("#go").on("click", function(){
-		var name = $("#name").val();
-		var score = numberify(name);
-	  
-		setScore(score);
-		if (checkPrime(score)) {
-			successMessage( name + " is prime!");
-		} else {
-			failMessage( name + " is not prime!");
+	$("#go").on("click", checkName);
+	$("#name").keypress(function(event){
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if (keycode ==13) {
+			checkName();
 		}
 	});
   </script>
